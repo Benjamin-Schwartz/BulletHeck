@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MegaBullet : MonoBehaviour {
+public class MegaBullet : MonoBehaviour
+{
 
     public float speed;
     public float maxDistance;
 
     public GameObject player;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         player = GameObject.FindWithTag("Player");
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         maxDistance += 1 * Time.deltaTime;
 
 
-        if (maxDistance >= 5)
+        if (maxDistance >= 10)
             Destroy(this.gameObject);
     }
 

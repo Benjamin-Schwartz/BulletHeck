@@ -62,6 +62,20 @@ public class PelletMiddle : MonoBehaviour
             triggeringEnemy.GetComponent<Enemy2>().health -= damage;
             Destroy(this.gameObject);
         }
+
+        if (other.tag == "MegaCube")
+        {
+            triggeringEnemy = other.gameObject;
+            triggeringEnemy.GetComponent<MegaCube>().health -= damage;
+            Destroy(this.gameObject);
+
+        }
+        if (other.tag == "BossSpawn")
+        {
+            triggeringEnemy = other.gameObject;
+            triggeringEnemy.GetComponent<BossSpawn>().health -= damage;
+            Destroy(this.gameObject);
+        }
     }
     public void Stop()
     {

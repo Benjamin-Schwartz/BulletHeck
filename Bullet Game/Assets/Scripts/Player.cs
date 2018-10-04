@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     public float points;
     public float health;
     public float maxHealth;
+    public bool bossfight = true;
 
     //stop pistol from shooting
     public GameObject shooting;
@@ -149,6 +151,15 @@ public class Player : MonoBehaviour
 
             maxShells = maxShells - shots;
             shots = 0;
+        }
+        if(points >= 1000 && bossfight)
+        {
+            bossfight = false;
+            if (!bossfight)
+            {
+                SceneManager.LoadScene("Boss");
+            }
+            bossfight = true;
         }
     }
 
