@@ -6,9 +6,8 @@ public class CanvasSwitcher : MonoBehaviour
 {
 
     public int selectedWeapon = 0;
-    public float health;
     public float pistolDisable = 1;
-    public GameObject bullet;
+  
     // Use this for initialization
     void Start()
     {

@@ -23,9 +23,12 @@ public class Player : MonoBehaviour
 
     public GameObject playerObj;
 
+    public float waitTime;
+    private float currentTime;
     public GameObject bulletSpawnPoint;
     public GameObject pelletSpawn;
-    public float waitTime;
+    public bool shot;
+   
     public GameObject bullet;
     public GameObject pellet;
     public GameObject pelletMid;
@@ -112,8 +115,17 @@ public class Player : MonoBehaviour
             //Shooting
             if (Input.GetMouseButtonDown(0))
         {
-            Shoot();
+
+            if (currentTime == 0)
+                Shoot();
+
+            if (shot && currentTime < waitTime)
+                currentTime += 1 * Time.deltaTime;
+
+            if (currentTime >= waitTime)
+                currentTime = 0;
         }
+        
 
         if (Input.GetKey(KeyCode.G) && Grenades > 0)
         {
@@ -166,6 +178,7 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
+        shot = true;
 
         if (shooting.GetComponent<WeaponSwitch>().pistolDisable == 1)
         {
