@@ -13,7 +13,7 @@ public class BulletWalls : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         MegaCube = GameObject.FindWithTag("MegaCube");
-        WallSpawn(); 
+        //WallSpawn(); 
 	}
 	
 	// Update is called once per frame

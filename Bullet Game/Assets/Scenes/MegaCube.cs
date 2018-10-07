@@ -5,8 +5,19 @@ using UnityEngine.UI;
 
 public class MegaCube : MonoBehaviour
 {
+
+    [Header("Explosion")]
+    public float cubeSize = 0.2f;
+    public int cubesInRow = 5;
+    public float explosionRadius;
+    public float explosionUpward;
+    public float explosionForce;
+
+    float cubesPivotDistance;
+    Vector3 cubesPivot;
+
     public float health;
-    public float startHealth = 100;
+    public float startHealth = 5000;
     public float pointsToGive;
     public float movementSpeed;
     public float waitTime;
@@ -37,7 +48,7 @@ public class MegaCube : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         BossSpawn = GameObject.FindWithTag("BossSpawn");
         health = startHealth;
-        if (health <= 8000)
+        if (health <= 2500)
         {
             Spawn();//Look and follow player and shoot
         }
@@ -51,7 +62,7 @@ public class MegaCube : MonoBehaviour
             shooting();
 
         }
-        if (health <= 8000 && !spawning)
+        if (health <= 2500 && !spawning)
         {
             Spawn();//Look and follow player and shoot
             spawning = true;
@@ -64,6 +75,10 @@ public class MegaCube : MonoBehaviour
             shotz = true;
         }
         BossHealthBar.fillAmount = health / startHealth;
+        if(health <= 0)
+        {
+            Die();
+        }
     }
 
     public void Shoot()
@@ -76,7 +91,7 @@ public class MegaCube : MonoBehaviour
     public void shooting()
     {
         this.transform.LookAt(player.transform);
-        transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
+       // transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
 
         if (currentTime == 0)
             Shoot();
@@ -132,5 +147,60 @@ public class MegaCube : MonoBehaviour
         Instantiate(this.gameObject.transform, new Vector3(0, 0, 0), Quaternion.identity);
         transform.GetComponent<Renderer>().enabled = true;
     }
+    void Die()
+    {
+        explode();
+    }
+        public void explode()
+        {
+            gameObject.SetActive(false);
 
-}
+            for (int x = 0; x < cubesInRow; x++)
+            {
+                for (int y = 0; y < cubesInRow; y++)
+                {
+                    for (int z = 0; z < cubesInRow; z++)
+                    {
+                        createPiece(x, y, z);
+                    }
+                }
+            }
+
+            //get explosion position
+            Vector3 explosionPos = transform.position;
+
+            //get colliders in that position and radius
+            Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
+            //add explosion force to all colliders in that overlap sphere
+            foreach (Collider hit in colliders)
+            {
+                //get rigidbody from collider object
+                Rigidbody rb = hit.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    //add explosion force to this body with given  parameters
+                    rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpward);
+                }
+            }
+        }
+        void createPiece(int x, int y, int z)
+        {
+            //create piece
+            GameObject piece;
+
+            piece = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            piece.GetComponent<Renderer>().material.color = new Color(0, 0, 0);
+
+            //set piece position and scale
+            piece.transform.position = transform.position + new Vector3(cubeSize * x, cubeSize * y, cubeSize * z) - cubesPivot;
+            piece.transform.localScale = new Vector3(cubeSize, cubeSize, cubeSize);
+            Destroy(piece, 2);
+            //add rigidbody and set mass
+            piece.AddComponent<Rigidbody>();
+            piece.GetComponent<Rigidbody>().mass = cubeSize;
+
+        }
+
+    }
+
+
